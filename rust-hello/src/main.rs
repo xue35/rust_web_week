@@ -6,9 +6,14 @@
 fn index() -> &'static str {
     "Hello, world!"
 }
+#[options("/")]
+fn index_options() -> &'static str {
+    "No otpion defined."
+}
+
 
 fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![index])
+    rocket::ignite().mount("/", routes![index, index_options])
 }
 
 fn main() {
@@ -46,7 +51,19 @@ mod test {
         let response = client.delete("/").dispatch();
         assert_eq!(response.status(), Status::NotFound);
     }
-      #[test]
+    #[test]
+    fn head_root() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let response = client.head("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+     #[test]
+    fn option_root() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let response = client.options("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+       #[test]
     fn hello_nonexist_path() {
         let client = Client::new(rocket()).expect("valid rocket instance");
         let response = client.get("/register").dispatch();
