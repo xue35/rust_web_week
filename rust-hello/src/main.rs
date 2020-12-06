@@ -1,6 +1,7 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 #[macro_use] extern crate rocket;
+use rocket::http::RawStr;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -11,9 +12,13 @@ fn index_options() -> &'static str {
     "No otpion defined."
 }
 
+#[get("/hello/<name>")]
+fn hello(name: &RawStr) -> String {
+    format!("Hello, {}!", name.as_str())
+}
 
 fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![index, index_options])
+    rocket::ignite().mount("/", routes![index, index_options,hello])
 }
 
 fn main() {
@@ -26,6 +31,13 @@ mod test {
     use rocket::local::Client;
     use rocket::http::Status;
 
+    #[test]
+    fn hello_name(){
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.get("/hello/dora").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(response.body_string(), Some("Hello, dora!".into()));
+    }
     #[test]
     fn get_root() {
         let client = Client::new(rocket()).expect("valid rocket instance");
