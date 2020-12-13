@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Vue Hello</title>
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <div id="root">
+            {{message}}
+        </div>
+    <script>
+        var app = new Vue({
+            el: '#root',
+            data: {
+                    message: 'Hello Vue!'
+            }
+        })
+        app.$mount('#root')
+    </script>
+    </body>
+</html>
+
