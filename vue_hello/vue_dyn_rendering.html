@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Vue Dynamic Rendering</title>
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <div id="root">
+            <span v-bind:title="message">
+                鼠标悬停几秒中，查看此处动态信息。
+            </span>
+        </div>
+    <script>
+        var app = new Vue({
+            el: '#root',
+            data: {
+                    message: '页面加载于：' + new Date().toLocaleString()
+            }
+        })
+        app.$mount('#root')
+    </script>
+    </body>
+</html>
+
